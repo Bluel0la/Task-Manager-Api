@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 from datetime import datetime
 
 
@@ -8,8 +9,7 @@ class UserSignup(BaseModel):
     lastname: str
     username: str
     password: str  # plaintext for signup only
-    role: str = "member"  # Default role for a User
-    created_at: datetime
+    role: Optional[str] = "member"  # Default role for a User
 
 
 class UserSignupResponse(BaseModel):
