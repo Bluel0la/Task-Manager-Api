@@ -23,7 +23,7 @@ def hash_password(password: str) -> str:
 cred = credentials.Certificate(
     "/etc/secrets/task-manager-blue-firebase-adminsdk-fbsvc-72b0a79e17.json"
 )
-#firebase_creds = json.loads(os.environ["FIREBASE_CREDENTIALS"])
+# firebase_creds = json.loads(os.environ["FIREBASE_CREDENTIALS"])
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -131,4 +131,17 @@ def get_project_by_name(name: str):
 # ------------------------
 def get_all_projects():
     docs = db.collection("projects").stream()
-    return [{"id": doc.id, **(doc.to_dict() or {})} for doc in docs]
+    projects = []
+    for doc in docs:
+        data = doc.to_dict() or {}
+        projects.append(
+            {
+                "id": doc.id,
+                "name": data.get("name"),
+                "description": data.get("description"),
+                "owner_id": data.get("owner_id"),
+                "owner_username": data.get("owner_username"),
+                "created_at": data.get("created_at"),
+            }
+        )
+    return projects

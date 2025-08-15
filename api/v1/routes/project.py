@@ -39,13 +39,4 @@ def get_project(project_id: str, current_user: dict = Depends(get_current_user))
 
 @projects.get("/all", response_model=list[ProjectResponse])
 def fetch_all_projects(current_user: dict = Depends(get_current_user)):
-    projects = get_all_projects()
-    if not projects:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="No projects found."
-        )
-        
-    return projects
-    
-    
+    return get_all_projects()
