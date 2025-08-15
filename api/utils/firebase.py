@@ -1,3 +1,4 @@
+from api.v1.schemas.projectSchema import ProjectResponse, ProjectCreate
 from firebase_admin import credentials, firestore
 from passlib.context import CryptContext
 from dotenv import load_dotenv
@@ -64,3 +65,68 @@ def get_user_by_id(user_id: str):
         return None
     user_data = doc.to_dict() or {}
     return {"id": doc.id, **user_data}
+
+
+# ------------------------
+# Create Project
+# ------------------------
+def create_project(project_in: ProjectCreate, owner_username: str):
+    # Ensure unique name
+    if get_project_by_name(project_in.name):
+        return None  # Caller will handle the error
+
+    project_data = {
+        "name": project_in.name.lower(),
+        "description": project_in.description,
+        "owner_username": owner_username,
+        "created_at": datetime.utcnow(),
+    }
+
+    project_ref = db.collection("projects").document()
+    project_ref.set(project_data)
+
+    return ProjectResponse(
+        id=project_ref.id,
+        name=project_data["name"],
+        description=project_data["description"],
+        owner_username=project_data["owner_username"],
+        created_at=project_data["created_at"],
+    )
+
+
+# ------------------------
+# Get Project by ID
+# ------------------------
+def get_project_by_id(project_id: str):
+    doc = db.collection("projects").document(project_id).get()
+    if not doc.exists:
+        return None
+    return {"id": doc.id, **(doc.to_dict() or {})}
+
+
+# ------------------------
+# Get Project by Name
+# ------------------------
+def get_project_by_name(name: str):
+    projects = (
+        db.collection("projects").where("name", "==", name.lower()).limit(1).stream()
+    )
+    project_doc = next(projects, None)
+    if not project_doc:
+        return None
+    data = project_doc.to_dict() or {}
+    return ProjectResponse(
+        id=project_doc.id,
+        name=data["name"],
+        description=data.get("description"),
+        owner_username=data["owner_username"],
+        created_at=data["created_at"],
+    )
+
+
+# ------------------------
+# Get All Projects
+# ------------------------
+def get_all_projects():
+    docs = db.collection("projects").stream()
+    return [{"id": doc.id, **(doc.to_dict() or {})} for doc in docs]
