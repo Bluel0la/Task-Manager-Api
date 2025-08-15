@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 from datetime import datetime
 import firebase_admin
-import os
+import os, json
 
 load_dotenv(".env")
 
@@ -23,7 +23,8 @@ def hash_password(password: str) -> str:
 cred = credentials.Certificate(
     "api/utils/task-manager-blue-firebase-adminsdk-fbsvc-72b0a79e17.json"
 )
-firebase_admin.initialize_app(cred)
+firebase_creds = json.loads(os.environ["FIREBASE_CREDENTIALS"])
+firebase_admin.initialize_app(firebase_creds)
 
 db = firestore.client()
 
