@@ -1,12 +1,26 @@
-import firebase_admin
 from firebase_admin import credentials, firestore
-from authentication import hash_password, SECRET_KEY, ALGORITHM
+from passlib.context import CryptContext
+from dotenv import load_dotenv
 from datetime import datetime
+import firebase_admin
+import os
+
+load_dotenv(".env")
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Hash password
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
 
 # Initialize Firebase Admin SDK
 
 cred = credentials.Certificate(
-    "task-manager-blue-firebase-adminsdk-fbsvc-72b0a79e17.json"
+    "api/utils/task-manager-blue-firebase-adminsdk-fbsvc-72b0a79e17.json"
 )
 firebase_admin.initialize_app(cred)
 

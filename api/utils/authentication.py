@@ -1,8 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from api.utils.firebase import get_user_by_id
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from firebase import get_user_by_id
 from jose import jwt, JWTError
 from dotenv import load_dotenv
 from typing import Optional

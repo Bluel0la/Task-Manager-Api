@@ -1,23 +1,11 @@
-import uvicorn
-from contextlib import asynccontextmanager
-from typing import Union
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.requests import Request
-from api.db.database import create_database
 from api.v1.routes import api_version_one
+from starlette.requests import Request
+from fastapi import FastAPI
+import uvicorn
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    create_database()
-    yield
-    ## write shutdown logic below yield
-
-
-app = FastAPI(lifespan=lifespan)
-
-
+app = FastAPI()
 
 
 origins = [
