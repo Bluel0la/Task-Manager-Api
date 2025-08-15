@@ -21,7 +21,7 @@ def hash_password(password: str) -> str:
 # Initialize Firebase Admin SDK
 
 cred = credentials.Certificate(
-    "etc/secrets/task-manager-blue-firebase-adminsdk-fbsvc-72b0a79e17.json"
+    "/etc/secrets/task-manager-blue-firebase-adminsdk-fbsvc-72b0a79e17.json"
 )
 #firebase_creds = json.loads(os.environ["FIREBASE_CREDENTIALS"])
 firebase_admin.initialize_app(cred)
