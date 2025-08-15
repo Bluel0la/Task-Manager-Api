@@ -35,3 +35,13 @@ class UserSigninResponse(BaseModel):
     role: str
     created_at: datetime
     access_token: str  # Optional if using JWT or Firebase Auth
+
+
+class UserInfo(BaseModel):
+    id: str
+    email: EmailStr
+    firstname: str
+    lastname: str
+    username: str
+    role: str
+    created_at: datetime

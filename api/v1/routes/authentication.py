@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from api.utils.authentication import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
 from api.utils.firebase import get_user_by_email, create_user
-from api.v1.schemas.userSchema import UserSignin, UserSigninResponse, UserSignup, UserSignupResponse
+from api.v1.schemas.userSchema import UserSignin, UserSigninResponse, UserSignup, UserSignupResponse, UserInfo
 from datetime import timedelta
 
 auth = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -35,7 +35,7 @@ def signin(user_data: UserSignin):
             detail="Invalid email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user["id"]},
@@ -53,7 +53,8 @@ def signin(user_data: UserSignin):
         "access_token": access_token
     }
 
-@auth.get("/me", response_model=UserSigninResponse)
+
+@auth.get("/me", response_model=UserInfo)
 def get_current_user_info(current_user: dict = Depends(get_current_user)):
     """
     Returns the authenticated user's information using the JWT token.
