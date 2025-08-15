@@ -36,6 +36,7 @@ db = firestore.client()
 def create_user(user_data):
     user_dict = user_data.dict()
     user_dict["password_hash"] = hash_password(user_dict.pop("password"))
+    user_dict["role"] = user_dict.get("role", "member")  # Default role
     user_dict["created_at"] = datetime.utcnow()
 
     # Create document in Firestore
