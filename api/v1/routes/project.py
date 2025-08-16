@@ -26,6 +26,10 @@ def create_new_project(project: ProjectCreate, current_user: dict = Depends(get_
     
     return new_project
 
+@projects.get("/all", response_model=list[ProjectResponse])
+def fetch_all_projects(current_user: dict = Depends(get_current_user)):
+    return get_all_projects()
+
 @projects.get("/{project_id}", response_model=ProjectResponse)
 def get_project(project_id: str, current_user: dict = Depends(get_current_user)):
     project = get_project_by_id(project_id)
@@ -35,8 +39,4 @@ def get_project(project_id: str, current_user: dict = Depends(get_current_user))
             detail="Project not found."
         )
         
-    return project
-
-@projects.get("/all", response_model=list[ProjectResponse])
-def fetch_all_projects(current_user: dict = Depends(get_current_user)):
-    return get_all_projects()
+    return project 
